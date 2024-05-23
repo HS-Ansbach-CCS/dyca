@@ -40,3 +40,6 @@ In ./example_data you find the data for the example code \
 Filenamestructure: \
     - {attractorname}\_{componentnoise}\_{additivenoise}.csv \
 componentnoise and additivenoise specify the SNR in dB
+
+## Acknowledgement
+This work was supported by the German Federal Ministry of Education and Research (BMBF, Funding number: 05M20WBA).
