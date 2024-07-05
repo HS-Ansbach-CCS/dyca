@@ -1,28 +1,78 @@
 import numpy as np
-import scipy.linalg as linalg
-from additional_functions_dyca import *
+from dyca_internal import _input_check, _calculate_correlations, _calculate_eigenvalues_and_vectors, _calculate_svd, _calculate_amplitudes, _derivativesignal
 
-
-def reconstruction(signal: np.ndarray, projectedsignal: np.ndarray):
-    """Find modes such that modes*projectedsignal approximates signal
+def dyca(signal: np.ndarray, m: int = None, n: int = None, time_index: np.ndarray = None, derivative_signal: np.ndarray = None) -> dict:
+    """ Calculate DyCA eigenvalues, DyCA singular values and DyCA amplitudes of the input signal. 
+    DyCA (Dynamical Component Analysis) is a method to extract temporal amplitudes from a multivariate signal based on the assumption
+    that the temporal evoltion of these amplitudes is driven by a certaim set of differential equations.
+    See https://doi.org/10.1109/OJSP.2020.3038369 for detailed information.
 
     Arguments:
-        signal {np.ndarray} -- input signal (time, channels)
-        projectedsignal {np.ndarray} -- projected signal (n, time)
+        signal {np.ndarray} -- Input signal (shape = time, channels) with full rank.
+        m {int} -- Number of linear components to be used for reconstruction. If m = None, only the eigenvalues are returned.
+        n {int} -- Number of differential equations to be used for the reconstruction. If n = None, only the eigenvalues and singular values are returned.
+        (optional) time_index {np.ndarray} -- The corresponding array of the times for the signal (time,).
+        (optional) derivative_signal {np.ndarray} -- The derivative of the signal with respect to the time array (time, channels).
+        You can use this to use a better suited derivative signal than the default one, e. g. with appropriate filters.
 
     Returns:
-        dictionary with:
-            modes {np.ndarray} -- modes (channels, n)
-            reconstruction {np.ndarray} -- reconstructed signal (time, channels)
-            cost {float} -- cost of the reconstruction
+        Dictionary with:
+            amplitudes {np.ndarray | None} -- Amplitudes (n, time).
+            generalized_eigenvalues {np.ndarray | None} -- Eigenvalues (channels,).
+            singular_values {np.ndarray | None} -- Singular_values of the amplitudes (2*m,).
 
+        The values of the returned dictionary are None if the corresponding parameter m or n are set to None.
     """
+    if time_index is None:
+        time_index = np.array(range(signal.shape[0]))
 
-    modes = signal @ np.linalg.pinv(projectedsignal)
+    if derivative_signal is None:
+        derivative_signal = _derivativesignal(signal, time_index)
+
+    # Check inputs
+    try:
+        _input_check(signal, m, n, time_index, derivative_signal)
+    except Exception as e:
+        raise ValueError(e)
+    
+    # compute correlation matrices
+    signal_autocorrelation_inv, signal_derivate_correlation, derivate_autocorrelation = _calculate_correlations(signal, derivative_signal)
+
+    # solve for eigenvalues, eigenvectors
+    generalized_eigenvalues, eigenvectors = _calculate_eigenvalues_and_vectors(
+        signal_autocorrelation_inv, signal_derivate_correlation, derivate_autocorrelation)
+
+    # do singular value decomposition of the amplitudes corresponding to the DyCA eigenvector-matrix U and the associated matrix V
+    U_svd, S_svd, V_svd = _calculate_svd(m, signal_autocorrelation_inv, signal_derivate_correlation, eigenvectors, signal)
+
+    # project the signal along n important components
+    amplitudes = _calculate_amplitudes(U_svd, S_svd, V_svd, n)
+
+    output = {'amplitudes': amplitudes,
+              'generalized_eigenvalues': generalized_eigenvalues,
+              'singular_values': S_svd}
+
+    return output
+
+def reconstruction(signal: np.ndarray, amplitudes: np.ndarray) -> dict:
+    """Find modes such that modes*amplitudes approximates signal
+
+    Arguments:
+        signal {np.ndarray} -- Input signal (time, channels).
+        amplitudes {np.ndarray} -- Amplitudes (n, time).
+
+    Returns:
+        Dictionary with:
+            modes {np.ndarray} -- Modes (channels, n).
+            reconstruction {np.ndarray} -- Reconstructed signal (time, channels).
+            cost {float} -- L2-norm of the reconstruction (relative to the signal norm).
+    """
+    modes = signal @ np.linalg.pinv(amplitudes)
 
     # reconstructed time-series
-    reconstruction = modes @ projectedsignal
+    reconstruction = modes @ amplitudes
 
+    # cost of the reconstruction (relative L2-norm)
     cost = np.linalg.norm(reconstruction - signal) / np.linalg.norm(signal)
 
     output = {
@@ -30,88 +80,5 @@ def reconstruction(signal: np.ndarray, projectedsignal: np.ndarray):
         'reconstruction': reconstruction,
         'cost': cost
     }
-
-    return output
-
-
-def dyca(signal: np.ndarray, m: int = -1, n: int = -1, time_signal: np.ndarray = None, derivative_signal: np.ndarray = None):
-    """ Calculates the dynamical Components of the input signal and its projected signal
-
-    Arguments:
-        signal {np.ndarray} -- input signal (time, channels) with full rank
-        m {int} -- number of linear components to be used for reconstruction - if m = -1, only the eigenvalues are returned
-        n {int} -- number of equations to be used for reconstruction - if n = -1, only the eigenvalues and singular values are returned
-        (optional) time_signal {np.ndarray} -- the corresponding time array of the signal (time,)
-        (optional) derivative_signal {np.ndarray} -- the derivative of the signal with respect to the time array (time, channels)
-
-    Returns:
-        dictionary with:
-            projectedsignal {np.ndarray} -- projected signal (n, time)
-            eigenvalues {np.ndarray} -- eigenvalues (channels,)
-            singular_values {np.ndarray} -- singular_values of the projected signal (2*m,)
-
-    """
-
-    output = {
-        'projectedsignal': None,
-        'eigenvalues_dyca': None,
-        'singular_values': None
-    }
-
-    signal, m, n, time_signal, derivative_signal = input_check(signal, m, n, time_signal, derivative_signal)
-    time_length = signal.shape[0]
-
-    # Calculate correlation matrices C0, C1 and C2
-    C0 = (np.transpose(signal) @ signal) / time_length
-    C1 = (derivative_signal.transpose() @ signal) / time_length
-    C2 = (derivative_signal.transpose() @ derivative_signal) / time_length
-
-    # calculate the inverse of C0 by Cholesky decomposition
-    try:
-        C0_inv = cholesky_inverse(C0)
-    except Exception as e:
-        print(e)
-        raise ValueError('Failed calculating the inverse of C0. Check your rank of the input signal.')
-
-    # Solve the generalized eigenvalue problem
-    # C1* inv(C0)* C1^T* u_i = lambda_i * C2 * u_i
-    lambda_i, u_i = linalg.eig(C1 @ C0_inv @ np.transpose(C1), C2)
-
-    # Check if eigenvalues are real
-    lambda_i = check_eigenvalues_real(lambda_i)
-
-    # Sort eigenvalues lambda_i and eigenvectors u_i
-    indices = np.flip(np.argsort(lambda_i))
-    lambda_i_sort = lambda_i[indices]
-    u_i = (u_i[:, indices])
-
-    # Stop algorithm, if m is unknown
-    if m == -1:
-        output['eigenvalues_dyca'] = lambda_i_sort
-        return output
-
-    # Select m linear components
-    u_i = u_i[:, :m]
-
-    # Calculate v_i
-    v_i = C0_inv @ np.transpose(C1) @ u_i
-
-    # calculating the svd to select n equations
-    projectionMatrix = np.concatenate((u_i, v_i), axis=1)
-    amplitude = signal @ projectionMatrix
-    amplitude_norm = np.divide(amplitude, np.sqrt(np.diag(amplitude.transpose() @ amplitude))).transpose()
-    U_svd, S_svd, V_svd = linalg.svd(amplitude_norm, full_matrices=False)
-
-    # stop algorithm, if n is unknown
-    if n == -1:
-        output['eigenvalues_dyca'] = lambda_i_sort
-        output['singular_values'] = S_svd
-        return output
-
-    projectedsignal = U_svd[0:n, 0:n] @ np.diag(S_svd[0:n]) @ V_svd[0:n, :]
-
-    output['projectedsignal'] = projectedsignal
-    output['eigenvalues_dyca'] = lambda_i_sort
-    output['singular_values'] = S_svd
 
     return output
