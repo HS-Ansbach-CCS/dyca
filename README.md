@@ -29,9 +29,9 @@ and implemented in
 ```./example_code/{attractorname}_{additivenoise}_example.py```
 
 ## Contact information
-For question please contact: (mailto:annika.stiehl@hs-ansbach.de) or (mailto:christian.uhl@hs-ansbach.de). \\
-Prof. Dr. Christian Uhl \\
-University of Applied Sciences Ansbach \\
+For question please contact: (mailto:annika.stiehl@hs-ansbach.de) or (mailto:christian.uhl@hs-ansbach.de). \
+Prof. Dr. Christian Uhl \
+University of Applied Sciences Ansbach \
 [https://www.hs-ansbach.de/personen/uhl-christian/](https://www.hs-ansbach.de/personen/uhl-christian/)
 
 
