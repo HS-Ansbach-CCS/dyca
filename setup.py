@@ -14,6 +14,8 @@ setup(
                       'scipy==1.13.0'],
 
     python_requires='>=3.10',
+    long_description=open('README.md', 'r').read(),
+    long_description_content_type='text/markdown',
 
     classifiers=[
         'Development Status :: 3 - Alpha',
