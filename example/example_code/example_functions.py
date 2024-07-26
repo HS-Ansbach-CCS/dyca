@@ -1,5 +1,5 @@
 import sys
-sys.path.append('./')
+sys.path.append('./app/code')
 
 import matplotlib.pyplot as plt
 from dyca import dyca, reconstruction
