@@ -2,7 +2,7 @@
 Dynamical Component Analysis (DyCA) is a dimension reduction method for multivariate time series data. 
 
 ## Installing information
-``` $ pip install dyca ```
+``` $ pip install -r requirements.txt ```
 
 ## There are different ways to use the DyCA algorithm:
 1. You know the number of linear and nonlinear components --> fine, you can use dyca(signal, time, m, n)
