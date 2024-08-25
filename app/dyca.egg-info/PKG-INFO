@@ -1,13 +1,12 @@
 Metadata-Version: 2.1
 Name: dyca
-Version: 0.1.1
+Version: 1.0.0
 Summary: Dynamical Component Analysis - A method to decompose multivariate signals
 Home-page: https://github.com/HS-Ansbach-CCS/dyca
 Author: Annika Stiehl
 Author-email: annika.stiehl@hs-ansbach.de
 License: GPL-3.0
 Platform: UNKNOWN
-Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Programming Language :: Python :: 3.10
@@ -15,6 +14,8 @@ Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Classifier: Topic :: Scientific/Engineering :: Mathematics
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
+Provides-Extra: dev
+License-File: LICENSE
 
 # Dynamical Component Analysis (DyCA)
 Dynamical Component Analysis (DyCA) is a dimension reduction method for multivariate time series data. 

@@ -1,5 +1,4 @@
-import sys
-sys.path.append('./app/code')
+# if needed: pip install -r requirements.txt
 
 import matplotlib.pyplot as plt
 from dyca import dyca, reconstruction

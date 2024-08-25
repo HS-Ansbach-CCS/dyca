@@ -1,5 +1,5 @@
 import numpy as np
-from dyca_internal import _input_check, _calculate_correlations, _calculate_eigenvalues_and_vectors, _calculate_svd, _calculate_amplitudes, _derivativesignal
+from .dyca_internal import _input_check, _calculate_correlations, _calculate_eigenvalues_and_vectors, _calculate_svd, _calculate_amplitudes, _derivativesignal
 
 def dyca(signal: np.ndarray, m: int = None, n: int = None, time_index: np.ndarray = None, derivative_signal: np.ndarray = None) -> dict:
     """ Calculate DyCA eigenvalues, DyCA singular values and DyCA amplitudes of the input signal. 
