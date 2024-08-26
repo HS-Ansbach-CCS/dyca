@@ -2,7 +2,5 @@
 .venv
 /*.p
 settings.json
-dyca_test2/*
 dist/*
 dyca.egg-info/*
-build/*
