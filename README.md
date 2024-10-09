@@ -1,6 +1,7 @@
 
 # Dynamical Component Analysis (DyCA)
 Dynamical Component Analysis (DyCA) is a dimension reduction method for multivariate time series data. 
+
 [![DOI](https://img.shields.io/badge/DOI-10.3389%2Ffams.2024.1456635-blue)](https://www.frontiersin.org/journals/applied-mathematics-and-statistics/articles/10.3389/fams.2024.1456635)
 
 ## Installing information
