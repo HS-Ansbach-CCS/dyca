@@ -32,24 +32,26 @@ and implemented in
 ```./example_usage/example_code/{attractorname}_{additivenoise}_example.py```
 
 ## Citing information
+[![DOI](https://img.shields.io/badge/DOI-10.3389%2Ffams.2024.1456635-blue)](https://www.frontiersin.org/journals/applied-mathematics-and-statistics/articles/10.3389/fams.2024.1456635)
+
+Uhl C, Stiehl A, Weeger N, Schlarb M and Hüper K (2024) Disentangling dynamic and stochastic modes in multivariate time series. Front. Appl. Math. Stat. 10:1456635. doi: 10.3389/fams.2024.1456635
+
+BibTex:
 ```bibtex
-@Article{Uhl2020,
-  author={Uhl, Christian and Kern, Moritz and Warmuth, Monika and Seifert, Bastian},
-  journal={IEEE Open Journal of Signal Processing}, 
-  title={Subspace Detection and Blind Source Separation of Multivariate Signals by Dynamical Component Analysis (DyCA)}, 
-  year={2020},
-  volume={1},
-  number={},
-  pages={230-241},
-  keywords={Heuristic algorithms;Signal processing algorithms;Tools;Brain modeling;Mathematical model;Noise measurement;
-  Principal component analysis;Biomedical data;blind source separation;differential equations;dimensionality reduction;
-  dynamical component analysis;independent component analysis;low dimensional dynamics;motion detection;principal component analysis},
-  doi={10.1109/OJSP.2020.3038369}
+@Article{Uhl2024,
+  author={Uhl, Christian and Stiehl, Annika and Weeger, Nicolas and Schlarb, Markus and Hüper, Knut},
+  journal={Frontiers in Applied Mathematics and Statistics}, 
+  title={Disentangling dynamic and stochastic modes in multivariate time series}, 
+  year={2024},
+  volume={10},
+  issn={2297-4687},
+  url={https://www.frontiersin.org/journals/applied-mathematics-and-statistics/articles/10.3389/fams.2024.1456635},
+  doi={10.3389/fams.2024.1456635}
   }
 ```
-DOI: [10.1109/OJSP.2020.3038369](https://doi.org/10.1109/OJSP.2020.3038369)
+
 
 ## Acknowledgement
-This work was supported by the German Federal Ministry of Education and Research (BMBF, Funding number: 05M20WBA).
+This work has been supported by the German Federal Ministry of Education and Research (BMBF-Projekt, funding numbers: 05M20WWA and 05M20WBA Verbundprojekt 05M2020—DyCA).
 
 
