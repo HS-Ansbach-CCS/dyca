@@ -31,6 +31,12 @@ and implemented in
 
 ```./example_usage/example_code/{attractorname}_{additivenoise}_example.py```
 
+## Contact information
+For question please contact: 
+- mailto:annika.stiehl@hs-ansbach.de for installation or code-related information or 
+- mailto:christian.uhl@hs-ansbach.de for method-related information.
+
+
 ## Citing information
 [![DOI](https://img.shields.io/badge/DOI-10.3389%2Ffams.2024.1456635-blue)](https://www.frontiersin.org/journals/applied-mathematics-and-statistics/articles/10.3389/fams.2024.1456635)
 
