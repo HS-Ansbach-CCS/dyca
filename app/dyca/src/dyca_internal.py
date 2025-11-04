@@ -77,7 +77,7 @@ def _cholesky_inverse(matrix: np.ndarray):
 
 def _check_eigenvalues_real(eigenvalues: np.ndarray):
     """ Check if the eigenvalues are real"""
-    if np.all(np.imag(eigenvalues) != 0):
+    if np.any(np.imag(eigenvalues) != 0):
         raise ValueError('Complex eigenvalues detected. Check your input signal.')
     return np.real(eigenvalues)
 
