@@ -12,11 +12,10 @@ def _derivativesignal(signal: np.ndarray, time_signal: np.ndarray):
     Returns:
         np.ndarray -- derivative of the signal (timepoints, channels)
     """
-    max = len(signal)
-    dt = time_signal[1] - time_signal[0]
-    derivative_signal = (signal[2:max, :] - signal[0:max - 2, :]) / (2 * dt)
-    first = (signal[1, :] - signal[0, :]) / dt
-    last = (signal[max - 1, :] - signal[max - 2, :]) / dt
+    derivative_signal = np.divide((signal[2:, :] - signal[0: - 2, :]), (time_signal[2:, None] - time_signal[0: - 2, None]))
+
+    first = (signal[1, :] - signal[0, :]) / (time_signal[1] - time_signal[0])
+    last = (signal[-1, :] - signal[-2, :]) / (time_signal[-1] - time_signal[-2])
     derivative_signal = np.vstack((first, derivative_signal, last))
 
     return derivative_signal
