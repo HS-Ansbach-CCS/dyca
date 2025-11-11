@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='dyca',
-    version='1.0.1',
+    version='1.0.2',
     description='Dynamical Component Analysis - A method to decompose multivariate signals',
     package_dir={"": "app"},
     packages=find_packages(where="app"),
