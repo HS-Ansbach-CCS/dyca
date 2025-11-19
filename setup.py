@@ -10,7 +10,7 @@ setup(
     author='Annika Stiehl',
     author_email='annika.stiehl@hs-ansbach.de',
     license='GPL-3.0',
-    install_requires=['numpy>=1.18.0,<2.0.0',
+    install_requires=['numpy>=1.18.0',
                       'matplotlib',
                       'scipy>=1.13.0'],
     python_requires='>=3.10',
