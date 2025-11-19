@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dyca
-Version: 1.0.2
+Version: 1.0.3
 Summary: Dynamical Component Analysis - A method to decompose multivariate signals
 Home-page: https://github.com/HS-Ansbach-CCS/dyca
 Author: Annika Stiehl
@@ -14,7 +14,7 @@ Classifier: Topic :: Scientific/Engineering :: Mathematics
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: numpy<2.0.0,>=1.18.0
+Requires-Dist: numpy>=1.18.0
 Requires-Dist: matplotlib
 Requires-Dist: scipy>=1.13.0
 Provides-Extra: dev
