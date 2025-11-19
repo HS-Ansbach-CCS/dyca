@@ -74,10 +74,18 @@ def _cholesky_inverse(matrix: np.ndarray):
     return matrix_inv
 
 
-def _check_eigenvalues_real(eigenvalues: np.ndarray):
-    """ Check if the eigenvalues are real"""
-    if np.any(np.imag(eigenvalues) != 0):
-        raise ValueError('Complex eigenvalues detected. Check your input signal.')
+def _check_eigenvalues(eigenvalues: np.ndarray):
+    """ Check generalized eigenvalues:
+    - If complex eigenvalues are detected, raise an error.
+    - If negative eigenvalues are detected, raise an error.
+    - If eigenvalues over 1 are detected, raise an error."""
+    threshold = 1e-10
+    if np.any((np.abs(np.imag(eigenvalues))-threshold)>0):
+        raise ValueError('Complex eigenvalues detected. \nNumerical instability might be the cause, check the rank of the input signal.')
+    if np.any(np.real(eigenvalues) < 0):
+        raise ValueError('Negative eigenvalues detected. \nNumerical instability might be the cause, check the rank of the input signal.')
+    if np.any(np.real(eigenvalues) > 1):
+        raise ValueError('Eigenvalues over 1 detected. \nNumerical instability might be the cause, check the rank of the input signal.')
     return np.real(eigenvalues)
 
 
@@ -107,7 +115,7 @@ def _calculate_eigenvalues_and_vectors(C0_inv: np.ndarray, C1: np.ndarray, C2: n
     eigenvalues, eigenvectors = linalg.eig(C1 @ C0_inv @ C1.T, C2)
 
     # Check if eigenvalues are real
-    eigenvalues = _check_eigenvalues_real(eigenvalues)
+    eigenvalues = _check_eigenvalues(eigenvalues)
 
     # Sort eigenvalues and eigenvectors according to absolute value of eigenvalues
     indices = np.flip(np.argsort(eigenvalues))
